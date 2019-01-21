@@ -1,0 +1,1 @@
+# Boiler plate MEAN stack
