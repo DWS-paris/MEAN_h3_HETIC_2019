@@ -11,6 +11,8 @@ Import
     const ejs = require('ejs');
     //=> Gestion du corps des requêtes HTTP
     const bodyParser = require('body-parser');
+    //=> Connexion BDD
+    const dbConnect = require('./services/mongodb.serv')
     //=> Router
     const mainRouter = require('./routes/main.router');
 //
@@ -45,10 +47,18 @@ Configuration
         }
 
         launch(){
-            // Lancer le server
-            server.listen( port, () => {
-                console.log(`Server listening on port ${port}`);
+            // Connecter la BDD
+            dbConnect()
+            .then( db => {
+                // Start server
+                server.listen( port, () => {
+                    console.log({
+                        monngo: `BDD is connected ${db}!`,
+                        server: `Server listening on port ${port}!`
+                    });
+                });
             })
+            .catch( err => console.log(`Error MongoDB ${err}`) );
         }
     }
 //
