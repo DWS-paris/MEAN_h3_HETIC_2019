@@ -22,7 +22,7 @@ Méthodes AUTH
             UserModel.findOne( {email: body.email}, (error, user) =>{
                 if(error) reject(error) // MonngoDB error
                 else if(!user) reject('Unknow user')
-                else {
+                else { 
                     // Check password
                     const validPassword = bcrypt.compareSync(body.password, user.password);
                     if( !validPassword ) reject('Password not valid')
