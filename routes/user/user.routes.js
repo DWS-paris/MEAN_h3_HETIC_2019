@@ -6,7 +6,8 @@ Import & config
     const userRouter = express.Router();
 
     // Inner
-    const UserModel = require('../../models/user.model');
+    const checkFields = require('../../services/request.checker');
+    const { createItem, readItem, updateItem, deleteItem } = require('./user.ctrl');
 //
 
 /* 
@@ -19,15 +20,21 @@ Definition
             // Create
             userRouter.post( '/', (req, res) => {
 
-                console.log(req.body)
-                // Vérifier la présence de données dans le body
-                if( typeof req.body !== 'undefined' && req.body !== null ){
-                    // Inscrire un user
-                    UserModel.create( req.body )
-                    .then( user =>  res.json( { msg: "User created", data: user } ) )
-                    .catch( err => res.json( { msg: 'User not created', data: err } ) );
-                } else{
-                    res.json( { msg: 'No data provided', data: null } )
+                // Error: no body present
+                if (typeof req.body === 'undefined' || req.body === null) { 
+                    return res.json( { msg: 'No body data provided', data: null } )
+                }
+                
+                // Check fields in the body
+                const { ok, extra, miss } = checkFields( [ 'name', 'email', 'password' ], req.body )
+
+                //=> Error: bad fields provided
+                if( !ok ) res.json( { msg: 'Bad fields provided', data: { miss: miss, extra: extra } } )
+                else{
+                    // Register new user
+                    createItem(req.body)
+                    .then( apiResponse => res.json( { msg: 'User created', data: apiResponse } ) )
+                    .catch(apiResponse => res.json( { msg: 'User not created', data: apiResponse } ) );
                 }
             })
 
