@@ -42,7 +42,7 @@ Configuration
             server.use(bodyParser.urlencoded({ extended: true }));
 
             //=> Cookie-parser
-        server.use( cookieParser(process.env.COOKIE_SECRET) )
+            server.use(cookieParser());
 
             //=> Router
             server.use('/', mainRouter);

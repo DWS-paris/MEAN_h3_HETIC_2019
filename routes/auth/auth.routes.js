@@ -1,8 +1,11 @@
 /* 
 Import & config
 */
+    // NodeJS
     const express = require('express');
     const authRouter = express.Router();
+
+    // Inner
     const checkFields = require('../../services/request.checker');
     const { register, login } = require('./auth.ctrl');
 //
@@ -14,12 +17,12 @@ Definition
         constructor(){}
 
         routes(){
-            // Create
+            // Update
             authRouter.post( '/register', (req, res) => {
-                res.json( { msg: "Create Post", req: req.body } )
+                res.json( { msg: "Register user" } )
             })
 
-            // Read
+            // Delete
             authRouter.post( '/login', (req, res) => {
                 // Error: no body present
                 if (typeof req.body === 'undefined' || req.body === null) { 
@@ -27,12 +30,12 @@ Definition
                 }
                 
                 // Check fields in the body
-                const { ok, extra, miss } = checkFields( ['email', 'password' ], req.body )
+                const { ok, extra, miss } = checkFields( [ 'password', 'email'], req.body )
 
                 //=> Error: bad fields provided
                 if( !ok ) res.json( { msg: 'Bad fields provided', data: { miss: miss, extra: extra } } )
                 else{
-                    // Try log user
+                    // Register new user
                     login(req.body, res)
                     .then( apiResponse => res.json( { msg: 'User logged', data: apiResponse } ) )
                     .catch(apiResponse => res.json( { msg: 'User not logged', data: apiResponse } ) );

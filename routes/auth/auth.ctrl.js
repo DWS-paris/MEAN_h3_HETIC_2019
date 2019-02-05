@@ -10,30 +10,29 @@ Imports
 
 
 /* 
-Méthodes AUTH
+Méthodes CRUD
 */
-    const register = () => {
-        // TODO: add user.ctrl function
-    }
+    const register = (body) => {
+        return new Promise( (resolve, reject) => {
+           
+        });
+    };
 
     const login = (body, res) => {
         return new Promise( (resolve, reject) => {
             // Search user by email
             UserModel.findOne( {email: body.email}, (error, user) =>{
-                if(error) reject(error) // MonngoDB error
+                if(error) reject(error) // Mongo error
                 else if(!user) reject('Unknow user')
-                else {
+                else{
                     // Check password
                     const validPassword = bcrypt.compareSync(body.password, user.password);
                     if( !validPassword ) reject('Password not valid')
-                    else {
-                        // Création d'un cookie pour envoyer le token utilisateur dans le header de la response
-                        const userToken = user.generateJwt();
-                        res.cookie('berners', userToken, { httpOnly: true });
+                    else{
+                        // Set cookie
+                        res.cookie( 'hetic-blog', user.generateJwt() )
 
-                        console.log(userToken);
-                        
-                        return resolve( user );
+                        return resolve(user);
                     };
                 };
             });
