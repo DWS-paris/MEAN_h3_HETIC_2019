@@ -11,6 +11,8 @@ Import
     const ejs = require('ejs');
     //=> Gestion du corps des requêtes HTTP
     const bodyParser = require('body-parser');
+    //=> Gestion des cookies
+    const cookieParser = require('cookie-parser');
     //=> Connexion BDD
     const dbConnect = require('./services/mongodb.serv')
     //=> Router
@@ -38,6 +40,9 @@ Configuration
             //=> Body-parser
             server.use(bodyParser.json({limit: '10mb'}));
             server.use(bodyParser.urlencoded({ extended: true }));
+
+            //=> Cookie-parser
+        server.use( cookieParser(process.env.COOKIE_SECRET) )
 
             //=> Router
             server.use('/', mainRouter);
