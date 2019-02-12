@@ -15,7 +15,6 @@ Definition
             // Create
             postRouter.post( '/', (req, res) => {
                 // req.user._id
-                
                 res.json( { msg: "Create Post", req: req.body } )
             })
 
